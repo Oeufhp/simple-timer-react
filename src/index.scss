@@ -1,0 +1,84 @@
+/*! NOTE: These are just recommended default global styles, edit as required */
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+::selection {
+	/* Optional */
+	/* It can be really hard to read highlighted text with a text-shadow, it should be removed when selected */
+	text-shadow: none;
+
+	/* NOTE: Using this means the color and background-color are set to transparent for selected text... */
+	/* So you can customise your styles below */
+	color: #fff;
+	background-color: #00f;
+}
+
+html {
+	/* Declare your font family type in the html selector, then your font-family in the body selector */
+	font-family: sans-serif | serif | monospace | cursive | fantasy;
+
+	/* Make base font-size 100% of browser font-size */
+	font-size: 100%;
+
+	/* Declare your box-sizing here, then inherit the box sizing below in the *, *::before and *::after selector */
+	/* https://css-tricks.com/box-sizing */
+	box-sizing: border-box | content-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth; /* Smoothly animate to different sections within a page, only if the user doesn't mind animations */
+	}
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit; /* See line 22 */
+}
+
+img {
+	/* For responsive images that adjust & adapt */
+	height: auto;
+	max-width: 100%;
+
+	/* This isn't needed, but as a user, I get frustrated when I highlight text and the image gets highlighted too */
+	user-select: none;
+}
+
+button {
+	color: inherit; /* By default, buttons don't inherit the font colour, this is a useful default to override */
+}
+
+a,
+button {
+	touch-action: manipulation; /* Element doesn't want double-tap on mobile to zoom */
+}
+
+svg {
+	/* Make the SVGs fit the parent container by default */
+	height: 100%;
+	width: 100%;
+
+	/* Optional - make the SVG's fill be the same as the inherited color */
+	fill: currentColor;
+
+	/* Prevent the SVG from altering cursor interaction */
+	pointer-events: none;
+}
+
+iframe {
+	/* Make the iframes fit the parent container by default */
+	height: 100%;
+	width: 100%;
+}
