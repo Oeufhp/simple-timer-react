@@ -2,7 +2,7 @@ import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Button from "@material-ui/core/Button"
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined"
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid"
 import { addNewTimer, updatedTimer } from "../../store/slice/timer/api"
 import AppLayoutStyled from "./styled"
 import TimerCard from "../../components/TimerCard/loadable"
@@ -23,7 +23,6 @@ function ApplicationLayout() {
 			addNewTimer({
 				title: "",
 				project: "",
-				timer: "00:00:00",
 				id
 			})
 		)
@@ -32,7 +31,11 @@ function ApplicationLayout() {
 	const onCreateTimer = (id, data) => {
 		let willBeUpdateTimer = listTimer.find(timer => timer.id === id)
 		if (typeof willBeUpdateTimer !== "undefined") {
-			willBeUpdateTimer = Object.assign({ ...willBeUpdateTimer, title: data.title, project: data.project, timer: data.timer })
+			willBeUpdateTimer = Object.assign({
+				...willBeUpdateTimer,
+				title: data.title,
+				project: data.project
+			})
 		} else {
 			willBeUpdateTimer = { title: data.title, project: data.project, id }
 		}
@@ -50,11 +53,11 @@ function ApplicationLayout() {
 		return listTimer.map(timer => {
 			return (
 				<TimerCard
+					className='timer'
 					key={timer.id}
 					title={timer.title}
 					project={timer.project}
 					id={timer.id}
-					timer={timer.timer}
 					onCreateTimer={onCreateTimer}
 					onDeleteTimer={deleteTimer}
 				/>
@@ -69,7 +72,7 @@ function ApplicationLayout() {
 				<Button variant='outlined' onClick={addTimerCardClick}>
 					<AddOutlinedIcon />
 				</Button>
-				{renderTimer()}
+				<div className='timer-container'>{renderTimer()}</div>
 			</div>
 		)
 	}

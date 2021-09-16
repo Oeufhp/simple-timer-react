@@ -5,51 +5,48 @@ import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/DeleteOutline"
+import usePrevious from "../../hooks/usePrevious"
 
 const TimerCard = props => {
 	const [isEditMode, setEditMode] = useState(true)
 	const [title, setTitle] = useState("")
 	const [project, setProject] = useState("")
 	const [isCounting, setIsCounting] = useState(false)
-	let [second, setSecond] = useState("0")
-	let [minute, setMinute] = useState("0")
-	let [hour, setHour] = useState("0")
+	const [second, setSecond] = useState(0)
+	const [minute, setMinute] = useState(0)
+	const [hour, setHour] = useState(0)
 
-	function pad(val) {
-		const valStr = val.toString()
-		if (valStr.length < 2) {
-			return `0${valStr}`
-		} else {
-			return valStr
+	const prevProps = usePrevious(props.id)
+
+	useEffect(() => {
+		if (prevProps?.id !== props.id) {
+			setTitle(props.title)
+			setProject(props.project)
 		}
-	}
+	}, [props.title, props.project, props.timer, props.isCounting, prevProps?.id, props.id])
 
 	useEffect(() => {
-		setTitle(props.title)
-		setProject(props.project)
-		const splittedTimer = props.timer.split(":")
-		setSecond(pad(splittedTimer[2]))
-		setMinute(pad(splittedTimer[1]))
-		setHour(pad(splittedTimer[0]))
-	}, [props.title, props.project, props.timer])
-
-	useEffect(() => {
-		let myInterval = setInterval(() => {
+		const myInterval = setInterval(() => {
+			let tempHour = hour
+			let tempMinute = minute
+			let tempSecond = second
 			if (isCounting) {
-				second++
-				setSecond(pad(second))
-				if (second === "60") {
-					minute++
-					setMinute(pad(minute))
-					setSecond("0")
-					if (minute === "60") {
-						hour++
-						setHour(pad(hour))
-						setMinute("0")
-						setSecond("0")
+				tempSecond++
+				setSecond(tempSecond)
+				if (tempSecond === 60) {
+					tempMinute++
+					tempSecond = 0
+					setMinute(tempMinute)
+					setSecond(tempSecond)
+					if (minute === 60) {
+						tempHour++
+						tempMinute = 0
+						tempSecond = 0
+						setHour(tempHour)
+						setMinute(tempMinute)
+						setSecond(tempSecond)
 					}
 				}
-				props.onCreateTimer(props.id, { title, project, timer: `${hour}:${minute}:${second}` })
 			} else {
 				clearInterval(myInterval)
 			}
@@ -57,19 +54,19 @@ const TimerCard = props => {
 		return () => clearInterval(myInterval)
 	}, [hour, isCounting, minute, project, props, second, title])
 
-	const onCreateButtonClick = e => {
-		e.preventDefault()
+	const onCreateButtonClick = () => {
 		setEditMode(false)
-		props.onCreateTimer(props.id, { title, project, timer: `${hour}:${minute}:${second}` })
+		props.onCreateTimer(props.id, { title, project })
 	}
 
-	const onCancelButtonClick = e => {
-		e.preventDefault()
+	const onCancelButtonClick = () => {
 		setEditMode(false)
+		if (title === "" || project === "") {
+			props.onDeleteTimer(props.id)
+		}
 	}
 
-	const onToggleTimer = e => {
-		e.preventDefault()
+	const onToggleTimer = () => {
 		setIsCounting(!isCounting)
 	}
 
@@ -106,7 +103,7 @@ const TimerCard = props => {
 
 	const renderButton = () => {
 		let output = (
-			<Button variant='outlined' onClick={e => onToggleTimer(e)}>
+			<Button variant='outlined' onClick={onToggleTimer}>
 				{isCounting ? "Stop" : "Start"}
 			</Button>
 		)
@@ -126,7 +123,7 @@ const TimerCard = props => {
 	}
 
 	return (
-		<TimerCardStyled>
+		<TimerCardStyled className={props.className}>
 			{renderTitleAndProject()}
 			{renderButton()}
 		</TimerCardStyled>
