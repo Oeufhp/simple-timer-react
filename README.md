@@ -1,5 +1,7 @@
 ## Simple timer app using Reactjs
 
+[DEMO LINK](https://pitarn-timer-app.netlify.app/)
+
 In the project directory, you can run:
 
 ### `yarn start`
